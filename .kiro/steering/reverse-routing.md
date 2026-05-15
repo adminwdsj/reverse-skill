@@ -21,11 +21,24 @@ inclusion: auto
 - 浏览器自动化、打开网页、填表、爬取、截图、自动化登录、Playwright、agent-browser、headless
 - 游戏逆向、反作弊、Cheat Engine、Unity、IL2CPP、Unreal Engine、x64dbg、游戏安全、game hacking、anti-cheat、EAC、BattlEye
 
-## 路由入口（按顺序读取）
+## 路由入口（相对于本包根目录，按顺序读取）
 
-1. `F:\Cybersecurity skills router\skills\SKILL.md`
-2. `F:\Cybersecurity skills router\skills\routing.md`
-3. `F:\Cybersecurity skills router\skills\tool-index.md`
+> **注意**：以下路径是相对于本包安装位置的。AI 应自动检测本包实际所在目录，不要假设固定盘符。
+> 检测方法：找到本文件（`.kiro/steering/reverse-routing.md`）所在目录，向上两级即为包根目录。
+
+1. `skills/SKILL.md`
+2. `skills/routing.md`
+3. `skills/tool-index.md`
+
+## 首次使用必做
+
+如果 `tool-index.md` 中的路径不是当前机器的（用户名不对、盘符不对），先执行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "<本包根目录>/skills/scripts/refresh-tool-index.ps1"
+```
+
+这会重新扫描当前机器的工具状态并更新索引。
 
 ## 执行原则
 
@@ -41,38 +54,37 @@ inclusion: auto
 
 ```
 1. 识别任务属于安全/逆向类 → 触发本路由规则
-2. 读取 SKILL.md → routing.md → 确定进入哪个子 skill
-3. 如果路由未命中 → 提议新增 skill（按 CONTRIBUTING.md 流程）
-4. 检查 field-journal/_index.md → 是否有同类经验可复用
-5. 读取 tool-index.md → 确认本机工具状态
-6. 如果缺工具 → 调用 bootstrap-reverse.ps1 自动补齐
-7. 如果自动补齐失败 → 输出结构化引导（含手动步骤），等用户确认后继续
-8. 进入对应 skill 的工作流 → 执行任务
-9. 任务完成 → 调用 docs-generator skill，在用户项目目录生成技术文档/报告
-10. 自动回写 field-journal/
-11. 更新 _index.md → 检查是否需要更新路由/索引/manifest → 执行更新
-12. 输出最终结果
+2. 检测本包实际安装路径（从本 steering 文件位置推导）
+3. 如果 tool-index 路径与当前机器不符 → 先执行 refresh-tool-index.ps1
+4. 读取 SKILL.md → routing.md → 确定进入哪个子 skill
+5. 如果路由未命中 → 提议新增 skill（按 CONTRIBUTING.md 流程）
+6. 检查 field-journal/_index.md → 是否有同类经验可复用
+7. 读取 tool-index.md → 确认本机工具状态
+8. 如果缺工具 → 调用 bootstrap-reverse.ps1 自动补齐
+9. 如果自动补齐失败 → 输出结构化引导（含手动步骤），等用户确认后继续
+10. 进入对应 skill 的工作流 → 执行任务
+11. 任务完成 → 调用 docs-generator skill，在用户项目目录生成技术文档/报告
+12. 自动回写 field-journal/
+13. 更新 _index.md → 检查是否需要更新路由/索引/manifest → 执行更新
+14. 输出最终结果
 ```
 
 ## Bootstrap 命令
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "F:\Cybersecurity skills router\skills\scripts\bootstrap-reverse.ps1" -Capability @('工具名') -StartServices
+powershell -NoProfile -ExecutionPolicy Bypass -File "<本包根目录>/skills/scripts/bootstrap-reverse.ps1" -Capability @('工具名') -StartServices
 ```
 
 ## 刷新工具索引
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "F:\Cybersecurity skills router\skills\scripts\refresh-tool-index.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "<本包根目录>/skills/scripts/refresh-tool-index.ps1"
 ```
-
 
 ## 新增 Skill
 
 当发现路由矩阵无法覆盖当前任务类型时，按 `CONTRIBUTING.md` 流程新增 skill：
 
-```
-F:\Cybersecurity skills router\skills\CONTRIBUTING.md
-```
+路径：`<本包根目录>/skills/CONTRIBUTING.md`
 
 新增后必须同步更新：路由矩阵、bootstrap-manifest、ToolDiscovery、refresh-tool-index、本 steering 文件的关键词列表。
