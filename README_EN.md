@@ -24,7 +24,9 @@
   <a href="#about">About</a> ·
   <a href="#getting-started">Getting Started</a> ·
   <a href="#usage">Usage</a> ·
+  <a href="skills/MASTER-ROUTING.md">Fast route</a> ·
   <a href="skills/routing.md">Routing</a> ·
+  <a href="skills/ops/">Ops contracts</a> ·
   <a href="README_AI.md">AI Bootstrap</a> ·
   <a href="#contributing">Contributing</a>
 </p>
@@ -44,7 +46,12 @@
 When an AI agent (Claude Code, Codex CLI, Cursor, etc.) encounters an APK, a binary, frontend JS encryption, a CTF challenge, or a pentesting target, this package routes it to the right methodology, checks available tools, and executes a repeatable workflow instead of guessing commands.
 
 ```
-User task → RULES.md → Skill Router → Scenario Skill → Tools / MCP / Scripts → Report + field journal
+User task
+  → RULES.md
+  → MASTER-ROUTING / master-route.ps1 (PRIMARY)
+  → case-init / scope.md (auth + network_profile; no target ACT until ready)
+  → Scenario skill → tools / MCP / scripts
+  → timeline + Evidence→Finding→Path → report + field-journal
 ```
 
 **Why this exists:**
@@ -53,7 +60,7 @@ User task → RULES.md → Skill Router → Scenario Skill → Tools / MCP / Scr
 - Tools, MCP servers, and scripts are scattered across machines
 - The same mistakes get repeated because experience isn't reused
 
-Full routing matrix: [skills/routing.md](skills/routing.md)
+PRIMARY ladder: [skills/MASTER-ROUTING.md](skills/MASTER-ROUTING.md) · Full matrix: [skills/routing.md](skills/routing.md) · Ops: [skills/ops/](skills/ops/)
 
 <br/>
 
@@ -119,15 +126,22 @@ Platform-specific docs:
 | Scenario | Entry |
 |----------|-------|
 | APK / Android analysis | `skills/apk-reverse/` |
+| iOS / mobile | `skills/mobile-reverse/` |
 | Binary reverse (exe/dll/so/elf) | `skills/ida-reverse/` / `skills/radare2/` |
+| .NET / C# | `skills/dotnet-reverse/` |
 | Frontend JS / encrypted params | `skills/js-reverse/` |
+| DSL VM / custom JS opcode VM | `skills/reverse-engineering/dsl-vm-reverse/` |
 | HTTP capture / request replay | anything-analyzer + `js-reverse/` |
+| Malware / YARA | `skills/malware-analysis/` |
 | Penetration testing / scanning | `skills/pentest-tools/` |
+| Attack chain / red-team orchestration | `skills/attack-chain/` |
 | CTF competition | `CTF-Sandbox-Orchestrator/` (40+ sub-skills) |
 | Firmware / IoT | `skills/firmware-pentest/` |
 | Patch diff / N-day | `skills/patch-diff-exploit/` |
 | Pwn / exploit development | `skills/pwn-chain/` |
 | EDR bypass | `skills/edr-bypass-re/` |
+| API / GraphQL | `skills/api-security/` |
+| Supply chain / SBOM | `skills/supply-chain-security/` |
 | LLM / AI security | `skills/llm-security/` |
 | OLLVM deobfuscation | `skills/reverse-engineering/references/ollvm-deobfuscation.md` |
 | Diagrams / reports | `skills/diagram-generator/` / `skills/docs-generator/` |
@@ -137,41 +151,35 @@ Platform-specific docs:
 | File | Purpose |
 |------|---------|
 | [README_AI.md](README_AI.md) | AI agent bootstrap and configuration |
-| [RULES.md](RULES.md) | Global routing rules |
+| [RULES.md](RULES.md) | Global routing rules (scope gate before ACT) |
+| [skills/MASTER-ROUTING.md](skills/MASTER-ROUTING.md) | PRIMARY fast ladder |
 | [skills/routing.md](skills/routing.md) | Task → skill routing matrix |
 | [skills/SKILL.md](skills/SKILL.md) | Master entry point |
 | [skills/tool-index.md](skills/tool-index.md) | Local tool status (auto-generated) |
+| [skills/scripts/master-route.ps1](skills/scripts/master-route.ps1) | One-shot PRIMARY triage |
+| [skills/scripts/case-init.ps1](skills/scripts/case-init.ps1) | Case dir: scope / timeline / workitems |
+| [skills/ops/](skills/ops/) | Scope, Evidence chain, roles, timeline (skill-router form) |
 
 ### Repository layout
 
 ```
 .
-├── README.md              # Chinese entry
-├── README_EN.md           # This file — English entry
-├── README_AI.md           # AI agent bootstrap
-├── RULES.md               # Global routing rules
+├── README.md / README_EN.md / README_AI.md
+├── RULES.md / RULES_zh.md
 ├── skills/
-│   ├── SKILL.md           # Master entry
-│   ├── routing.md         # Routing matrix
-│   ├── field-journal/     # Experience logs
-│   ├── apk-reverse/       # APK reverse
-│   ├── js-reverse/        # JS reverse
-│   ├── ida-reverse/       # IDA Pro workflow
-│   ├── radare2/           # radare2
-│   ├── reverse-engineering/ # General RE
-│   ├── pentest-tools/     # Penetration testing
-│   ├── pwn-chain/         # Exploit development
-│   ├── patch-diff-exploit/ # N-day
-│   ├── firmware-pentest/  # Firmware / IoT
-│   ├── edr-bypass-re/     # EDR bypass
-│   ├── binary-diff/       # Symbol migration
-│   ├── browser-automation/ # Browser / desktop
-│   ├── diagram-generator/ # Diagrams
-│   ├── docs-generator/    # Reports
-│   └── llm-security/      # LLM security
-├── CTF-Sandbox-Orchestrator/ # CTF skills
-├── docs/                     # Overview & architecture docs
-└── kali/                     # Kali scripts
+│   ├── MASTER-ROUTING.md / SKILL.md / routing.md
+│   ├── ops/                   # ops contracts
+│   ├── scripts/               # master-route, case-init, bootstrap, verify
+│   ├── field-journal/
+│   ├── apk-reverse/ mobile-reverse/ js-reverse/ dotnet-reverse/
+│   ├── ida-reverse/ radare2/ reverse-engineering/ malware-analysis/
+│   ├── pentest-tools/ attack-chain/ pwn-chain/ firmware-pentest/
+│   ├── api-security/ supply-chain-security/ llm-security/
+│   └── ...
+├── CTF-Sandbox-Orchestrator/
+├── docs/
+├── kali/                      # see kali/README-kali.md
+└── work/                      # local cases (gitignored)
 ```
 
 <p align="right">(<a href="#usage">back to top</a>)</p>

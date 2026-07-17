@@ -27,7 +27,9 @@
   <a href="#关于项目">关于</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="#使用说明">使用说明</a> ·
+  <a href="skills/MASTER-ROUTING.md">快路径</a> ·
   <a href="skills/routing.md">路由矩阵</a> ·
+  <a href="skills/ops/">作战契约</a> ·
   <a href="README_AI.md">AI 引导</a> ·
   <a href="#贡献">贡献</a>
 </p>
@@ -47,7 +49,12 @@
 当 AI Agent（Claude Code、Codex CLI、Cursor 等）遇到 APK、二进制、前端 JS 加密、CTF 或渗透测试任务时，这套系统能让它先路由到正确的方法论，再调用本机工具执行，而不是盲目猜命令。
 
 ```
-用户任务 → RULES.md → Skill Router → 目标 Skill → 工具 / MCP / 脚本 → 报告 + 经验沉淀
+用户任务
+  → RULES.md
+  → MASTER-ROUTING / master-route.ps1（PRIMARY）
+  → case-init / scope.md（授权 + network_profile；未就绪禁止对目标 ACT）
+  → 目标 Skill → 工具 / MCP / 脚本
+  → timeline + Evidence→Finding→Path → 报告 + field-journal
 ```
 
 **为什么需要这个项目：**
@@ -55,7 +62,7 @@
 - 工具路径、MCP 服务、脚本入口分散在不同机器，迁移困难
 - 同样的问题每次重新踩坑，经验无法复用
 
-完整路由矩阵：[skills/routing.md](skills/routing.md)
+PRIMARY 快路径：[skills/MASTER-ROUTING.md](skills/MASTER-ROUTING.md) · 全表：[skills/routing.md](skills/routing.md) · 作战契约：[skills/ops/](skills/ops/)
 
 <br/>
 
@@ -115,15 +122,22 @@ git clone https://github.com/zhaoxuya520/reverse-skill.git
 | 场景 | 入口 |
 |------|------|
 | APK / Android 逆向 | `skills/apk-reverse/` |
+| iOS / 移动端 | `skills/mobile-reverse/` |
 | 二进制逆向 (exe/dll/so/elf) | `skills/ida-reverse/` / `skills/radare2/` |
+| .NET / C# | `skills/dotnet-reverse/` |
 | 前端 JS 签名 / 加密参数 | `skills/js-reverse/` |
+| DSL VM / 风控自定义 VM | `skills/reverse-engineering/dsl-vm-reverse/` |
 | HTTP 抓包 / 请求重放 | anything-analyzer + `js-reverse/` |
+| 恶意软件 / YARA | `skills/malware-analysis/` |
 | 渗透测试 / 漏洞扫描 | `skills/pentest-tools/` |
+| 攻击链 / 红队编排 | `skills/attack-chain/` |
 | CTF 竞赛 | `CTF-Sandbox-Orchestrator/` (40+ 子技能) |
 | 固件 / IoT | `skills/firmware-pentest/` |
 | 补丁差分 / N-day | `skills/patch-diff-exploit/` |
 | Pwn / 漏洞利用 | `skills/pwn-chain/` |
 | EDR 绕过 | `skills/edr-bypass-re/` |
+| API / GraphQL | `skills/api-security/` |
+| 供应链 / SBOM | `skills/supply-chain-security/` |
 | LLM / AI 安全 | `skills/llm-security/` |
 | OLLVM 脱密 | `skills/reverse-engineering/references/ollvm-deobfuscation.md` |
 | 图表 / 报告 | `skills/diagram-generator/` / `skills/docs-generator/` |
@@ -134,40 +148,38 @@ git clone https://github.com/zhaoxuya520/reverse-skill.git
 |------|------|
 | [README_AI.md](README_AI.md) | AI Agent 配置引导（Agent 必读） |
 | [RULES.md](RULES.md) | 全局路由规则 |
+| [skills/MASTER-ROUTING.md](skills/MASTER-ROUTING.md) | PRIMARY 快路径 |
 | [skills/routing.md](skills/routing.md) | 路由矩阵（场景 → Skill） |
 | [skills/SKILL.md](skills/SKILL.md) | 总控入口 |
 | [skills/tool-index.md](skills/tool-index.md) | 本机工具索引（自动生成） |
+| [skills/scripts/master-route.ps1](skills/scripts/master-route.ps1) | 一键分诊 |
+| [skills/scripts/case-init.ps1](skills/scripts/case-init.ps1) | 作战 case 目录（scope/timeline） |
+| [skills/ops/](skills/ops/) | Scope / 证据链 / 角色 / 时间线 / skill 供应链安全 |
+| [skills/references/community-security-skills.md](skills/references/community-security-skills.md) | 社区安全 skill 生态对照（借鉴不并库） |
 
 ### 仓库结构
 
 ```
 .
-├── README.md              # 本文件
-├── README_EN.md           # 英文版
-├── README_AI.md           # AI Agent 配置引导
-├── RULES.md               # 全局路由规则
+├── README.md / README_EN.md / README_AI.md
+├── RULES.md / RULES_zh.md     # 全局路由（含 scope 门）
 ├── skills/
-│   ├── SKILL.md           # 总控入口
-│   ├── routing.md         # 路由矩阵
-│   ├── field-journal/     # 经验日志
-│   ├── apk-reverse/       # APK 逆向
-│   ├── js-reverse/        # JS 逆向
-│   ├── ida-reverse/       # IDA Pro 工作流
-│   ├── radare2/           # radare2 分析
-│   ├── reverse-engineering/ # 通用逆向方法论
-│   ├── pentest-tools/     # 渗透测试
-│   ├── pwn-chain/         # 漏洞利用
-│   ├── patch-diff-exploit/ # N-day 分析
-│   ├── firmware-pentest/  # 固件 / IoT
-│   ├── edr-bypass-re/     # EDR 绕过
-│   ├── binary-diff/       # 符号迁移
-│   ├── browser-automation/ # 浏览器自动化
-│   ├── diagram-generator/ # 图表生成
-│   ├── docs-generator/    # 报告生成
-│   └── llm-security/      # LLM / AI 安全
-├── CTF-Sandbox-Orchestrator/ # CTF 子技能 (40+)
-├── docs/                     # 概览与架构文档
-└── kali/                     # Kali 辅助脚本
+│   ├── MASTER-ROUTING.md      # PRIMARY 快路径
+│   ├── SKILL.md / routing.md  # 总控 + 三轴矩阵
+│   ├── ops/                   # Scope / 证据链 / 角色 / 时间线
+│   ├── scripts/               # master-route / case-init / bootstrap / verify
+│   ├── field-journal/         # 脱敏经验
+│   ├── apk-reverse/ mobile-reverse/ js-reverse/ dotnet-reverse/
+│   ├── ida-reverse/ radare2/ reverse-engineering/ malware-analysis/
+│   ├── pentest-tools/ attack-chain/ pwn-chain/ firmware-pentest/
+│   ├── patch-diff-exploit/ edr-bypass-re/ binary-diff/
+│   ├── api-security/ supply-chain-security/ llm-security/
+│   ├── browser-automation/ diagram-generator/ docs-generator/
+│   └── ...
+├── CTF-Sandbox-Orchestrator/  # CTF 子技能
+├── docs/                      # 平台与架构
+├── kali/                      # Kali 脚本与 README-kali.md
+└── work/                      # 本地 case 产物（gitignore）
 ```
 
 <p align="right">(<a href="#使用说明">返回顶部</a>)</p>

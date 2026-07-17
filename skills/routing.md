@@ -5,10 +5,13 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 ## CRITICAL: Routing Execution Protocol
 
 1. **MUST** complete routing BEFORE executing. Do NOT "do first, route later".
-2. **MUST** match ALL three dimensions (target type + user intent + toolchain) before entering a skill.
-3. If route not matched → propose new skill, do NOT force-fit.
-4. Cross-module tasks → combine skills per "Path Crossing" section.
-5. After routing, read the target skill's SKILL.md BEFORE taking action.
+2. **SHOULD** start from `MASTER-ROUTING.md` or `scripts/master-route.ps1` for PRIMARY; use this full matrix when ambiguous.
+3. **MUST** match dimensions (target type + user intent + toolchain) before entering a skill.
+4. If route not matched → propose new skill, do NOT force-fit.
+5. Cross-module tasks → combine skills per "Path Crossing" section.
+6. After routing, read the target skill's SKILL.md BEFORE taking action.
+7. **Ops contract** (skill-router form): `ops/scope-contract.md` before ACT; Evidence→Finding→Path; roles in `ops/role-map.md`; timeline/workitems under `work/<case>/`. Identity: `ops/IDENTITY.md`.
+8. **External skills**: do NOT bulk-vendor community packs; map + rules in `references/community-security-skills.md` + `ops/skill-supply-chain.md`. RE stages: `reverse-engineering/references/re-agent-workflow.md`. Recon: `pentest-tools/references/recon-pipeline.md`.
 
 ## By Target Type
 
@@ -18,12 +21,13 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | Binary exe/dll/so/elf | `ida-reverse/` — IDA Pro decompile | `radare2/` — CLI analysis, or `reverse-engineering/tools.md` — GDB/Unicorn |
 | JavaScript / Web frontend | `js-reverse/` — 5-stage workflow | anything-analyzer MCP browser tools, or jshookmcp CDP/Hook |
 | HTTP capture / browser sampling / request replay | anything-analyzer MCP (23816) | `js-reverse/`, jshookmcp, or `competition-web-runtime/` |
-| Firmware / IoT | `reverse-engineering/platforms.md` — binwalk/ARM/MIPS | `reverse-engineering/tools.md` — Ghidra headless |
-| WASM / Python bytecode / .NET / **DSL VM / 自定义虚拟机** | `dsl-vm-reverse/SKILL.md` — 分析 IIFE + 单字母变量 + switch-case opcode 的 JS 型自定义虚拟机 | `reverse-engineering/languages.md` — 标准 WASM 二进制用 `languages.md` 处理 |
+| Firmware / IoT | `firmware-pentest/` — extract → EMBA → emulate → fuzz | `reverse-engineering/platforms.md` — static RE only |
+| WASM / Python bytecode / .NET / **DSL VM / 自定义虚拟机** | `reverse-engineering/dsl-vm-reverse/SKILL.md` — IIFE + switch-case opcode JS VM | `reverse-engineering/languages.md` — real WASM binaries |
+| Malware / virus sample | `malware-analysis/SKILL.md` — six-stage + YARA/Sigma | `ida-reverse/` deep dive |
 | macOS / iOS | `reverse-engineering/platforms.md` — Mach-O/ObjC/Swift | `mobile-reverse/` for iOS-specific |
 | Game (Unity) | `reverse-engineering/` — engine reverse, anti-cheat, IL2CPP/Mono (see seed-014) | `ida-reverse/` deep analysis |
 | Memory dump / PCAP | `reverse-engineering/platforms.md` | `reverse-engineering/patterns*.md` |
-| Malware / virus sample | `reverse-engineering/` — YARA/sandbox/behavior analysis | `ida-reverse/` deep analysis |
+
 | OLLVM-obfuscated binary (控制流平坦化/虚假控制流/MBA) | `reverse-engineering/references/ollvm-deobfuscation.md` — 完整脱密工作流 | obpo-plugin / d810-ng (IDA) / ollvm-unflattener (Miasm) / ollvm-breaker (Binary Ninja) / angr / deollvm (ARM64)
 | Cryptography / encryption algorithms | `reverse-engineering/patterns*.md` — crypto patterns | `js-reverse/` (if frontend crypto) |
 | Protocol reverse / custom protocol | `reverse-engineering/platforms.md` — network protocols | `js-reverse/` (if WebSocket/HTTP) |
@@ -45,9 +49,9 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 
 | User Says | Route To |
 |-----------|----------|
-| "DSL VM / 自定义指令集 / 风控引擎逆向" | `dsl-vm-reverse/SKILL.md` — 自定义 VM 逆向（IIFE + switch-case opcode） |
-| "fireye / fireyejs / getToken 逆向" | `dsl-vm-reverse/SKILL.md` — DSL VM 运行时捕获 |
-| "582KB JS 文件不是 WASM / 大 JS 文件逆向" | `dsl-vm-reverse/SKILL.md` — 先识别是否为 DSL VM |
+| "DSL VM / 自定义指令集 / 风控引擎逆向" | `reverse-engineering/dsl-vm-reverse/SKILL.md` — IIFE + switch-case opcode |
+| "fireye / fireyejs / getToken 逆向" | `reverse-engineering/dsl-vm-reverse/SKILL.md` — runtime capture |
+| "582KB JS 文件不是 WASM / 大 JS 文件逆向" | `reverse-engineering/dsl-vm-reverse/SKILL.md` — classify DSL VM first |
 | "decompile / IDA analyze" | `ida-reverse/SKILL.md` — IDA MCP workflow |
 | "recover source / disassemble" | `reverse-engineering/SKILL.md` + `ida-reverse/` |
 | "Frida hook / dynamic inject" | `reverse-engineering/tools-dynamic.md` — Frida section |
@@ -258,16 +262,16 @@ Frontend JS Reverse Path:
   js-reverse/references/env-patching.md
 
 DSL VM Reverse Path:
-  dsl-vm-reverse/SKILL.md → identify DSL VM (IIFE + single-letter vars + DG() switch-case)
+  reverse-engineering/dsl-vm-reverse/SKILL.md → identify DSL VM (IIFE + single-letter vars + DG() switch-case)
   ↓ Extract opcode table & constant table
-  dsl-vm-reverse/SKILL.md Phase 2-4 → opcode classification, C[9] constant analysis
+  reverse-engineering/dsl-vm-reverse/SKILL.md Phase 2-4 → opcode classification, C[9] constant analysis
   ↓ If runtime capture needed
   browser-automation/ → Playwright/Selenium CDP injection
   ↓ If pure API protocol needed
   js-reverse/ → Observe→Capture→Rebuild (API layer only)
 
 CTF Competition Path (via CTF-Sandbox-Orchestrator):
-  ctf-sandbox-orchestrator/SKILL.md → build sandbox model
+  ../CTF-Sandbox-Orchestrator/ctf-sandbox-orchestrator/SKILL.md → build sandbox model
   ↓ Route by dominant evidence
   competition-web-runtime/ or competition-reverse-pwn/ or competition-identity-windows/
   ↓ Blocked → return to master

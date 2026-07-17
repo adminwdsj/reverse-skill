@@ -6,11 +6,14 @@
 
 读完本文件后，不允许只回复“已读/已理解”。必须按顺序执行：
 
-1. `NOW`：读取 `routing.md`，按“目标类型 + 用户意图 + 工具链”三轴完成路由判定。
-2. `NOW`：读取目标子模块 `SKILL.md`，提取第一步可执行动作。
-3. `NEXT`：若涉及本机工具，读取 `tool-index.md` 校验路径与可用性；禁止凭经验猜路径。
-4. `THEN`：若缺工具，调用 `scripts/bootstrap-reverse.ps1` 自动补齐后继续任务。
-5. `ACT`：执行任务，不要停留在“等待用户下一条确认”状态。
+1. `NOW`：读 `MASTER-ROUTING.md`（或跑 `scripts/master-route.ps1 -Hint "..."`）定 PRIMARY；疑难再读 `routing.md` 三轴表。
+2. `NOW`：`scripts/case-init.ps1` 落地 `work/<case>/scope.md`（契约见 `ops/scope-contract.md`）；**auth 未 granted 禁止对目标 ACT**。
+3. `NOW`：按 `ops/role-map.md` 标 lead/specialist；立即打开 PRIMARY `SKILL.md` 执行 ACTION REQUIRED。
+4. `NEXT`：涉及本机工具时读 `tool-index.md`；**禁止猜路径**；缺工具 → `bootstrap-reverse.ps1`（仅 manifest）。
+5. `ACT`：执行并 **追加 timeline / 更新 workitems**；结论用 Evidence→Finding→Path（`ops/evidence-finding-path.md`）。
+6. 结束：`docs-generator` 报告 + 脱敏 `field-journal`；阶段菜单 3–6 项。
+
+**身份**：见 `ops/IDENTITY.md`（轻量路由包 + 工具自举 + journal；**不是** Z3r0 式平台）。
 
 如果路由无法命中，必须先联网补充方法论并提议新增 skill，禁止硬塞到不匹配模块。
 
@@ -45,15 +48,22 @@
 | **API 安全测试** | `api-security/` | REST/GraphQL/WebSocket 全协议：BOLA/IDOR、JWT/OAuth 攻击、10 阶段方法论 |
 | **供应链安全** | `supply-chain-security/` | SBOM/SCA/CI-CD 管道：依赖扫描、容器安全、构建完整性、漏洞可达性验证 |
 | **移动逆向工程** | `mobile-reverse/` | Android + iOS：Frida/Objection 动态插桩、SSL Pinning/Root/越狱检测绕过、OWASP MASTG |
-| **DSL 虚拟机逆向** | `dsl-vm-reverse/` | 分析 JavaScript 实现的自定义指令集虚拟机（IIFE + 单字母变量 + switch-case 解释器 + opcode 控制流），适用于风控引擎、自定义验证码 VM 等非标准 WASM 的 JS 虚拟机逆向 |
+| **恶意软件分析** | `malware-analysis/` | 样本分析六阶段、YARA/Sigma、反分析检测、沙箱编排 |
+| **DSL 虚拟机逆向** | `reverse-engineering/dsl-vm-reverse/` | JS 自定义指令集 VM（IIFE + switch-case opcode）；风控/验证码引擎等 |
+| **作战契约 ops** | `ops/` | Scope / 证据链 / 角色 / 时间线 / 身份 / skill 供应链安全 |
+| **社区 skill 对照** | `references/community-security-skills.md` | 外部安全 skill 索引与借鉴规则（禁止盲装） |
+| **Skill 供应链** | `ops/skill-supply-chain.md` | 外部 skill/MCP 安装门闩（AST10 精简） |
+| **RE 阶段门闩** | `reverse-engineering/references/re-agent-workflow.md` | triage→static→dynamic→synthesis |
+| **授权侦察管线** | `pentest-tools/references/recon-pipeline.md` | scope 门 + 命中≠验证 |
 
 ## 统一入口
 
 遇到逆向、CTF、抓包、前端签名、APK 改包、二进制分析类任务时，先按这个顺序进入：
 
-1. 先读 `routing.md`
-2. 再进入对应子模块的 `SKILL.md`
-3. 需要确认本机工具路径时，再读 `tool-index.md`
+1. `MASTER-ROUTING.md` 或 `scripts/master-route.ps1` → PRIMARY  
+2. 疑难时再读 `routing.md` 三轴全表  
+3. 打开 PRIMARY 子模块 `SKILL.md`  
+4. 需要本机路径时再读 `tool-index.md`  
 
 ## 工作思路
 
@@ -110,7 +120,9 @@
 powershell -NoProfile -ExecutionPolicy Bypass -File "<skill-root>\scripts\bootstrap-reverse.ps1" -Capability @('工具名') -StartServices
 ```
 
-支持的能力：jadx、apktool、frida、frida-ps、idalib-mcp、jshookmcp、anything-analyzer、idapro、r2、rabin2、adb、agent-browser、ghidra-mcp、nmap、seclists、proxycat、burpsuite-mcp、pentestswarm、binwalk、unblob、emba、firmadyne、qemu-static、pwntools、ropgadget、one_gadget、bindiff、ghidriff、syswhispers3、pe-sieve、garak、pyrit、osv-scanner、trivy、syft、gitleaks、objection、yara、floss
+支持的能力（以 `scripts/bootstrap-manifest.json` 为准）：jadx、apktool、frida、frida-ps、idalib-mcp、jshookmcp、anything-analyzer、idapro、r2、rabin2、adb、agent-browser、ghidra-mcp、nmap、seclists、proxycat、burpsuite-mcp、pentestswarm、binwalk、pwntools、yara
+
+> 清单中未登记的工具（如 unblob/EMBA/Foundry 等）`MUST` 在 skill 文档中走手动安装步骤，禁止假装可 bootstrap。
 
 自举完成后会自动刷新 `tool-index`。
 

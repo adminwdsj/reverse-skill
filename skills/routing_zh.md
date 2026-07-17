@@ -5,10 +5,13 @@
 ## CRITICAL: 路由判定执行协议
 
 1. `MUST` 先完成路由再执行，不允许“先做再补路由”。
-2. `MUST` 输出你的路由依据（目标类型/意图/工具链至少命中一项）。
-3. `MUST NOT` 因为“看起来差不多”把任务塞进不匹配 skill。
-4. `MUST` 在路由未命中时联网补充方法论，并提议新增 skill。
-5. `MUST NOT` 只回复“请给具体任务”；应先基于现有输入启动可确定步骤。
+2. `SHOULD` 先读 `MASTER-ROUTING.md` 或运行 `scripts/master-route.ps1` 定 PRIMARY；本表用于疑难补全。
+3. `MUST` 输出你的路由依据（目标类型/意图/工具链至少命中一项）。
+4. `MUST` 对目标 ACT 前完成 `case-init` / `scope.md`（`ops/scope-contract.md`）：`auth.status=granted` + `network_profile`。
+5. `MUST NOT` 因为“看起来差不多”把任务塞进不匹配 skill。
+6. `MUST` 在路由未命中时联网补充方法论，并提议新增 skill。
+7. `MUST NOT` 只回复“请给具体任务”；应先基于现有输入启动可确定步骤。
+8. 作战契约：`ops/`（证据链 / 角色 / 时间线 / IDENTITY）。
 ## 按目标类型
 
 | 目标类型 | 推荐入口 | 备选方案 |

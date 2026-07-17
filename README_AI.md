@@ -34,8 +34,14 @@ AI Community: https://linux.do
    - Other / unknown → read docs/PLATFORMS.md and choose the closest deployment path
 3. Follow the platform-specific deployment document to check toolchains, script entry points, MCP configuration, and path conventions
 4. If the current system supports Bash, prefer the parity bootstrap entry: bash skills/scripts/bootstrap-reverse.sh <capability>; for index refresh only, run: bash skills/scripts/refresh-tool-index.sh
-5. Read RULES.md → execute all instructions inside it (including the CRITICAL immediate-action block, global injection, precedent-file reading, and routing)
-6. Continue executing the complete behavior chain in RULES.md → enter the corresponding skill → start working
+5. Read RULES.md → execute all instructions inside it (CRITICAL block, global injection, precedent-auth, routing)
+6. Route via skills/MASTER-ROUTING.md or:
+   - Windows: `powershell -File skills/scripts/master-route.ps1 -Hint "<task>"`
+   - Linux/macOS/Kali: open MASTER-ROUTING.md (or run the same script under pwsh if available)
+7. **Ops gate (MUST):** `powershell -File skills/scripts/case-init.ps1 -Hint "<task>"` (or hand-write `work/<case>/scope.md` per `skills/ops/scope-contract.md`).  
+   Set `auth.status=granted` + `network_profile` before any target ACT. Evidence chain: `skills/ops/evidence-finding-path.md`. Roles: `skills/ops/role-map.md`. Identity: `skills/ops/IDENTITY.md`.
+8. Open PRIMARY SKILL.md → execute ACTION REQUIRED. Append timeline/workitems under the case dir.
+9. Continue the behavior chain → report via docs-generator + field-journal.
 ```
 
 ### Platform deployment routing table
@@ -67,6 +73,7 @@ AI Community: https://linux.do
 **Tool index**: <tool-index.md / tool-index.json path>
 **Rules written to**: <write location>
 **Note**: Future reverse-engineering / penetration-testing / security tasks will be routed automatically. Missing tools will be installed automatically when needed.
+**Ops**: Before target ACT, ensure case scope (`case-init` / `ops/scope-contract`) has auth granted + network_profile.
 ```
 
 ---
