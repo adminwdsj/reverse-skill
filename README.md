@@ -191,7 +191,13 @@ Platform-specific docs:
 
 ## Sponsors
 
-For sponsorship or business inquiries: [24781737@qq.com](mailto:24781737@qq.com)
+For sponsorship or business inquiries:
+
+<p align="center">
+  <a href="mailto:24781737@qq.com?subject=%5BSponsorship%5D%20reverse-skill">
+    <img src="https://img.shields.io/badge/Email%20us-24781737%40qq.com-0A66C2?style=for-the-badge&logo=maildotru&logoColor=white" alt="Email us — 24781737@qq.com" />
+  </a>
+</p>
 
 <p align="right">(<a href="#sponsors">back to top</a>)</p>
 

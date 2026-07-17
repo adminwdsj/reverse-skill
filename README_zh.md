@@ -191,7 +191,13 @@ git clone https://github.com/zhaoxuya520/reverse-skill.git
 
 ## 赞助
 
-商务 / 赞助合作请邮件联系：[24781737@qq.com](mailto:24781737@qq.com)
+商务 / 赞助合作：
+
+<p align="center">
+  <a href="mailto:24781737@qq.com?subject=%5BSponsorship%5D%20reverse-skill">
+    <img src="https://img.shields.io/badge/%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-24781737%40qq.com-0A66C2?style=for-the-badge&logo=maildotru&logoColor=white" alt="发送邮件 — 24781737@qq.com" />
+  </a>
+</p>
 
 <p align="right">(<a href="#赞助">返回顶部</a>)</p>
 
