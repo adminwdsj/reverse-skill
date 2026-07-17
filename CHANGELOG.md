@@ -11,6 +11,10 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 - Routing: sigma vs malware, LLM 越狱 vs iOS 越狱, 完整渗透/打到域控 vs AD 域控, forensics vs OT ics; master-route.ps1 rewritten UTF-8 BOM for PS 5.1 CJK
 
+### Security
+
+- Added `docs/PACKAGE-SECURITY-AUDIT.md`: static audit of package executables (no backdoor / no auto DB wipe found; residual supply-chain notes for `@latest` and unsigned GitHub assets)
+
 
 ### Added
 
