@@ -59,6 +59,7 @@ install_hint() {
     linux:java) echo "apt: sudo apt install openjdk-17-jdk" ;;
     linux:node) echo "apt/nvm: sudo apt install nodejs npm; prefer NodeSource or nvm for newer Node" ;;
     linux:python3) echo "apt: sudo apt install python3 python3-venv python3-pip pipx" ;;
+    linux:python-cryptography) echo "apt: sudo apt install python3-cryptography" ;;
     linux:jadx) echo "GitHub release: download jadx ZIP to ~/tools/jadx" ;;
     linux:apktool) echo "apt or jar: sudo apt install apktool; or official apktool.jar" ;;
     linux:adb) echo "apt or Android platform-tools: sudo apt install adb" ;;
@@ -74,6 +75,7 @@ install_hint() {
     macos:java) echo "brew: brew install openjdk" ;;
     macos:node) echo "brew/nvm: brew install node; or nvm" ;;
     macos:python3) echo "brew: brew install python; then pipx/venv" ;;
+    macos:python-cryptography) echo "python3 -m pip install --user cryptography" ;;
     macos:jadx) echo "brew: brew install jadx" ;;
     macos:apktool) echo "brew: brew install apktool" ;;
     macos:adb) echo "brew: brew install android-platform-tools" ;;
@@ -101,6 +103,7 @@ install_hint() {
 TOOLS=(
   "java|core-runtime|Java runtime for jadx/apktool/Burp/Ghidra|java|java -version|"
   "python3|core-runtime|Python runtime for helper scripts and pipx tools|python3|python3 --version|"
+  "python-cryptography|mitv-airkan|Airkan RSA and AES-CBC protocol support|python3|none|"
   "pipx|core-runtime|Isolated Python CLI installer|pipx|pipx --version|"
   "node|core-runtime|Node.js runtime for MCP bridges|node|node --version|"
   "npm|core-runtime|Node package manager|npm|npm --version|"
@@ -167,6 +170,18 @@ for entry in "${TOOLS[@]}"; do
     done
   fi
 
+  if [[ "$name" == "python-cryptography" ]]; then
+    if python3 -c 'import cryptography' 2>/dev/null; then
+      available="yes"
+      path="$(cmd_path python3)"
+      source="python-module"
+    else
+      available="no"
+      path=""
+      source=""
+    fi
+  fi
+
   if [[ "$available" == "no" && -n "${probes:-}" ]]; then
     IFS=';' read -ra probe_list <<< "$probes"
     for probe in "${probe_list[@]}"; do
@@ -179,7 +194,9 @@ for entry in "${TOOLS[@]}"; do
     done
   fi
 
-  if [[ "$version_spec" != "none" ]]; then
+  if [[ "$name" == "python-cryptography" && "$available" == "yes" ]]; then
+    version="$(python3 -c 'import cryptography; print(cryptography.__version__)')"
+  elif [[ "$version_spec" != "none" ]]; then
     read -r ver_cmd ver_arg1 ver_arg2 <<< "$version_spec"
     if has_cmd "$ver_cmd"; then
       version="$(run_version "$ver_cmd" ${ver_arg1:-} ${ver_arg2:-})"

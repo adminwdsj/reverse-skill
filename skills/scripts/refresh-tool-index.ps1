@@ -36,6 +36,7 @@ $scriptRefs = @{
     'rax2' = @('radare2/SKILL.md')
     'python' = @('apk-reverse/scripts/frida-run.ps1')
     'pip' = @()
+    'python-cryptography' = @('mitv-airkan/scripts/mitv_airkan.py')
     'node' = @('js-reverse/SKILL.md')
     'npx' = @('js-reverse/SKILL.md')
     'jshookmcp' = @('js-reverse/SKILL.md')
@@ -108,7 +109,7 @@ $markdownContent = ($markdownLines -join [Environment]::NewLine) + [Environment]
 $markdownContent | Set-Content -LiteralPath $OutputMarkdown -Encoding utf8
 
 # --- Capability status view ---
-$capabilityNames = @('jadx', 'apktool', 'frida', 'frida-ps', 'idalib-mcp', 'jshookmcp', 'anything-analyzer', 'idapro', 'r2', 'rabin2', 'adb', 'agent-browser', 'ghidra-mcp', 'seclists', 'proxycat', 'burpsuite-mcp', 'pentestswarm', 'nmap', 'binwalk', 'yara', 'pwntools')
+$capabilityNames = @('jadx', 'apktool', 'frida', 'frida-ps', 'python-cryptography', 'idalib-mcp', 'jshookmcp', 'anything-analyzer', 'idapro', 'r2', 'rabin2', 'adb', 'agent-browser', 'ghidra-mcp', 'seclists', 'proxycat', 'burpsuite-mcp', 'pentestswarm', 'nmap', 'binwalk', 'yara', 'pwntools')
 $capabilityRows = @()
 foreach ($capName in $capabilityNames) {
     $state = Get-ReverseCapabilityState -Name $capName

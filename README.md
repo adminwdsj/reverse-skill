@@ -129,6 +129,7 @@ Platform-specific docs:
 | Scenario | Entry |
 |----------|-------|
 | APK / Android analysis | `skills/apk-reverse/` |
+| Xiaomi TV APK install without ADB | `skills/mitv-airkan/` |
 | iOS / mobile | `skills/mobile-reverse/` |
 | Binary reverse (exe/dll/so/elf) | `skills/ida-reverse/` / `skills/radare2/` |
 | .NET / C# | `skills/dotnet-reverse/` |
@@ -175,6 +176,7 @@ Platform-specific docs:
 │   ├── scripts/               # master-route, case-init, bootstrap, verify
 │   ├── field-journal/
 │   ├── apk-reverse/ mobile-reverse/ js-reverse/ dotnet-reverse/
+│   ├── mitv-airkan/           # Mi TV Assistant pairing and APK install
 │   ├── ida-reverse/ radare2/ reverse-engineering/ malware-analysis/
 │   ├── pentest-tools/ attack-chain/ pwn-chain/ firmware-pentest/
 │   ├── api-security/ supply-chain-security/ llm-security/

@@ -32,6 +32,7 @@ declare -a TOOL_CATALOG=(
     "rahash2|radare2|哈希与校验|-v|rahash2,${HOME}/tools/radare2/bin/rahash2"
     "rax2|radare2|进制与位运算转换|-v|rax2,${HOME}/tools/radare2/bin/rax2"
     "python|reverse-engineering|辅助脚本执行|--version|python3,python"
+    "python-cryptography|mitv-airkan|Airkan RSA 与 AES-CBC 协议实现||python3"
     "pip|reverse-engineering|Python 包管理|--version|pip3,pip"
     "node|js-reverse|运行 Node 侧 JS 复现与 MCP 客户端|--version|node"
     "npx|js-reverse|运行临时 npm 包与 MCP 入口|--version|npx"
@@ -98,6 +99,7 @@ declare -A SCRIPT_REFS=(
     ["rahash2"]="radare2/SKILL.md"
     ["rax2"]="radare2/SKILL.md"
     ["python"]="apk-reverse/scripts/frida-run.sh"
+    ["python-cryptography"]="mitv-airkan/scripts/mitv_airkan.py"
     ["node"]="js-reverse/SKILL.md"
     ["npx"]="js-reverse/SKILL.md"
     ["jshookmcp"]="js-reverse/SKILL.md"
@@ -160,6 +162,19 @@ resolve_tool() {
     IFS='|' read -r name skill purpose version_args fallbacks <<< "$entry"
 
     IFS=',' read -ra candidates <<< "$fallbacks"
+
+    if [[ "$name" == "python-cryptography" ]]; then
+        local python_path
+        python_path=$(find_command python3)
+        if [[ -n "$python_path" ]] && "$python_path" -c 'import cryptography' 2>/dev/null; then
+            local crypto_version
+            crypto_version=$("$python_path" -c 'import cryptography; print(cryptography.__version__)')
+            echo "${name}|${skill}|${purpose}|yes|${python_path}|${crypto_version}|python-module"
+            return
+        fi
+        echo "${name}|${skill}|${purpose}|no|||missing"
+        return
+    fi
 
     for candidate in "${candidates[@]}"; do
         # 展开 glob（如 build-tools/*/apksigner）

@@ -127,7 +127,7 @@ Usage:
 Capabilities (parity with bootstrap-reverse.ps1):
   jadx apktool frida frida-ps idalib-mcp jshookmcp anything-analyzer idapro
   r2 rabin2 adb agent-browser ghidra-mcp seclists proxycat burpsuite-mcp
-  nmap pentestswarm binwalk yara pwntools
+  nmap pentestswarm binwalk yara pwntools python-cryptography
 
 Examples:
   bash skills/scripts/bootstrap-reverse.sh jadx apktool frida
@@ -146,7 +146,7 @@ EOF
 ALL_CAPABILITIES=(
   jadx apktool frida frida-ps idalib-mcp jshookmcp anything-analyzer idapro
   r2 rabin2 adb agent-browser ghidra-mcp seclists proxycat burpsuite-mcp
-  nmap pentestswarm binwalk yara pwntools
+  nmap pentestswarm binwalk yara pwntools python-cryptography
 )
 
 if $LIST_ONLY; then
@@ -645,6 +645,16 @@ ensure_pwntools() {
   pipx install pwntools || python3 -m pip install --user pwntools
 }
 
+ensure_python_cryptography() {
+  ensure_python_runtime
+  if python3 -c "import cryptography" 2>/dev/null; then log_ok "python-cryptography ready"; return 0; fi
+  case "$PLATFORM" in
+    macos) python3 -m pip install --user cryptography || python3 -m pip install --user --break-system-packages cryptography ;;
+    linux) install_apt python3-cryptography || python3 -m pip install --user cryptography || python3 -m pip install --user --break-system-packages cryptography ;;
+  esac
+  python3 -c "import cryptography"
+}
+
 status_json_line() {
   local name="$1"
   local status="$2"
@@ -702,6 +712,7 @@ ensure_capability() {
     binwalk) ensure_binwalk ;;
     yara) ensure_yara ;;
     pwntools) ensure_pwntools ;;
+    python-cryptography) ensure_python_cryptography ;;
     *) log_err "No bootstrap definition for capability: $name"; return 1 ;;
   esac
 }

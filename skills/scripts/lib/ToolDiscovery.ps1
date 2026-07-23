@@ -222,6 +222,15 @@ function Get-ReverseToolCatalog {
             )
         }
         [pscustomobject]@{
+            Name = 'python-cryptography'
+            Skill = 'mitv-airkan'
+            Purpose = 'Airkan RSA 与 AES-CBC 协议实现'
+            VersionArgs = @('-c', 'import cryptography; print(cryptography.__version__)')
+            Fallbacks = @(
+                [pscustomobject]@{ Type = 'python-module'; Value = 'cryptography' }
+            )
+        }
+        [pscustomobject]@{
             Name = 'node'
             Skill = 'js-reverse'
             Purpose = '运行 Node 侧 JS 复现与 MCP 客户端'
@@ -896,6 +905,28 @@ function Resolve-ReverseToolSpec {
                         PrefixArgs = @('-jar', $candidate.Value)
                         VersionArgs = @('-jar', $candidate.Value, '--version')
                         FixedVersion = $fixedVersion
+                    }
+                }
+            }
+            'python-module' {
+                $python = Get-FirstCommandPath -Names @('python', 'python3')
+                if (-not [string]::IsNullOrWhiteSpace($python)) {
+                    & $python -c "import $($candidate.Value)" 2>$null
+                    if ($LASTEXITCODE -eq 0) {
+                        return [pscustomobject]@{
+                            Name = $definition.Name
+                            Skill = $definition.Skill
+                            Purpose = $definition.Purpose
+                            Available = $true
+                            IsExecutable = $true
+                            IsDirectory = $false
+                            Source = 'PythonModule'
+                            ResolvedPath = $python
+                            Command = $python
+                            PrefixArgs = @()
+                            VersionArgs = $definition.VersionArgs
+                            FixedVersion = $fixedVersion
+                        }
                     }
                 }
             }

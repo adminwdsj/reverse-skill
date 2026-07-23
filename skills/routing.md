@@ -22,6 +22,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | JavaScript / Web frontend | `js-reverse/` — 5-stage workflow | anything-analyzer MCP browser tools, or jshookmcp CDP/Hook |
 | HTTP capture / browser sampling / request replay | anything-analyzer MCP (23816) | `js-reverse/`, jshookmcp, or `competition-web-runtime/` |
 | Firmware / IoT | `firmware-pentest/` — extract → EMBA → emulate → fuzz | `reverse-engineering/platforms.md` — static RE only |
+| Xiaomi/Mi TV Assistant local management | `mitv-airkan/` — discovery, on-screen pairing, signed APK install, app launch | `apk-reverse/` when the APK itself needs analysis or bundle conversion |
 | WASM / Python bytecode / .NET / **DSL VM / 自定义虚拟机** | `reverse-engineering/dsl-vm-reverse/SKILL.md` — IIFE + switch-case opcode JS VM | `reverse-engineering/languages.md` — real WASM binaries |
 | Malware / virus sample | `malware-analysis/SKILL.md` — six-stage + YARA/Sigma | `ida-reverse/` deep dive |
 | macOS / iOS | `reverse-engineering/platforms.md` — Mach-O/ObjC/Swift | `mobile-reverse/` for iOS-specific |
@@ -77,6 +78,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "find frontend signature / encrypted params" | `js-reverse/SKILL.md` — Observe→Capture→Rebuild |
 | "jshookmcp / JS hook / CDP debug" | `js-reverse/SKILL.md` — same JS/Web chain |
 | "APK unpack / repack / modify smali" | `apk-reverse/SKILL.md` — decode→rebuild-sign-install |
+| "小米电视安装 APK / Mi TV Assistant / Airkan / phoneAppInstallV2 / 6095 / 9095" | `mitv-airkan/SKILL.md` — 无 ADB 配对、签名上传、应用查询与启动 |
 | "bypass anti-debug / anti-detection" | `reverse-engineering/anti-analysis.md` |
 | "OLLVM deobfuscate / 控制流平坦化去除 / deflat / 脱混淆" | `reverse-engineering/references/ollvm-deobfuscation.md` — 完整工作流 |
 | "obpo / obpo-plugin / d810-ng / d810" | `reverse-engineering/references/ollvm-deobfuscation.md` — 现代反混淆工具 |
@@ -209,6 +211,7 @@ Do NOT force the user to repeatedly confirm "this is CTF/local." Carry the CTF/l
 | IDA Pro (idapro_*) | `ida-reverse/` — MCP HTTP server + 72 tools |
 | radare2 (r2/rabin2/rasm2) | `radare2/` — CLI + recon.ps1 |
 | jadx / apktool | `apk-reverse/` — decode.ps1 / manifest-summary.ps1 |
+| Python `cryptography` + Mi TV Assistant HTTP | `mitv-airkan/` — Airkan 配对、签名与 APK 安装 CLI |
 | Frida | `reverse-engineering/tools-dynamic.md` |
 | GDB / GEF / pwndbg / rr | `reverse-engineering/tools.md` |
 | Ghidra (headless) | `reverse-engineering/tools.md` + Ghidra MCP |

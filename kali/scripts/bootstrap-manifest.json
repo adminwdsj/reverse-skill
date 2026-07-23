@@ -70,6 +70,15 @@
       "verifyCommand": "frida-ps"
     },
     {
+      "name": "python-cryptography",
+      "bootstrapKind": "pip-package",
+      "pipPackage": "cryptography",
+      "docsUrl": "https://cryptography.io/",
+      "canAutoInstall": true,
+      "verifyCommand": "python3",
+      "kaliNote": "优先 apt install python3-cryptography；缺失时再使用 pip。"
+    },
+    {
       "name": "idalib-mcp",
       "bootstrapKind": "pip-package",
       "pipPackage": "ida-pro-mcp",

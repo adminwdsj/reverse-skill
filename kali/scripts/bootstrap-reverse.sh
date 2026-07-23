@@ -26,7 +26,7 @@ for arg in "$@"; do
         --start-services) START_SERVICES=true ;;
         --skip-refresh) SKIP_REFRESH=true ;;
         --list|-l)
-            echo "jadx apktool frida frida-ps idalib-mcp jshookmcp anything-analyzer idapro r2 rabin2 adb agent-browser ghidra-mcp seclists proxycat burpsuite-mcp nmap pentestswarm"
+            echo "jadx apktool frida frida-ps python-cryptography idalib-mcp jshookmcp anything-analyzer idapro r2 rabin2 adb agent-browser ghidra-mcp seclists proxycat burpsuite-mcp nmap pentestswarm"
             echo "mcp-kali-server metasploitmcp hexstrike-ai adaptixc2 atomic-operator sstimap xsstrike wpprobe fluxion gef coercer evil-winrm-py netexec responder bloodhound certipy"
             exit 0
             ;;
@@ -41,7 +41,7 @@ if [[ ${#CAPABILITIES[@]} -eq 0 ]]; then
     echo "可用能力:"
     echo ""
     echo "  [逆向分析]"
-    echo "    jadx apktool frida frida-ps idalib-mcp r2 rabin2 adb gef"
+    echo "    jadx apktool frida frida-ps python-cryptography idalib-mcp r2 rabin2 adb gef"
     echo ""
     echo "  [渗透测试 - 经典工具]"
     echo "    nmap sqlmap hashcat hydra gobuster ffuf msfconsole nuclei"
@@ -373,6 +373,12 @@ ensure_capability() {
         # ─── pip 安装 ───
         frida|frida-ps)
             install_pip_package "frida-tools"
+            ;;
+        python-cryptography)
+            python3 -c "import cryptography" 2>/dev/null \
+                || install_apt_package "python3-cryptography" \
+                || install_pip_package "cryptography"
+            python3 -c "import cryptography"
             ;;
         idalib-mcp)
             install_pip_package "ida-pro-mcp" "git+https://github.com/mrexodia/ida-pro-mcp.git"
